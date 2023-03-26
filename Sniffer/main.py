@@ -1,3 +1,4 @@
+from util import app, net, trans
 import fun
 import socket
 
@@ -6,6 +7,12 @@ flag = 1
 
 
 if __name__ == '__main__':
+
+    flag_input = 0
+    print("筛选IP，输入0。")
+    print("筛选UDP，输入1；筛选TCP，输入2；筛选ICMP，输入3。")
+    print("筛选HTTP，输入4；筛选DNS，输入5。")
+    flag_input =  int(input(flag_input))
 
     '''
         这里创建一个socket，用于接收和发送IP数据包，也包括TCP、UDP、ICMP 和其他协议的数据包
@@ -29,20 +36,27 @@ if __name__ == '__main__':
 
     # 开始捕获数据包
     while flag:
-        print("--------------------------------------------------------------------------------")
         try:
             data, addr = s.recvfrom(65535)
-
-            ihl, protocol = fun.parse_ip(data)
-
-            if protocol == 1:
-                fun.parse_icmp(data, ihl)
-            elif protocol == 6:
-                fun.parse_tcp(data, ihl)
-            elif protocol == 17:
-                fun.parse_udp(data, ihl)
+            if flag_input == 1:
+                # udp
+                fun.udp_fun(data)
+            elif flag_input == 2:
+                # tcp
+                fun.tcp_fun(data)
+            elif flag_input == 3:
+                # icmp
+                fun.icmp_fun(data)
+            elif flag_input == 4:
+                # http
+                fun.http_fun(data)
+            elif flag_input == 5:
+                 # dns
+                fun.dns_fun(data)
             else:
-                print("其他协议！")
+                # ip
+                fun.ip_fun(data)
+
         except KeyboardInterrupt:
             print("退出！！！")
             break
